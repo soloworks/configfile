@@ -4,12 +4,9 @@ package configfile
 // A line is set out as:
 // Setting = Value // Comment
 //
-// Spacing:
-// 24 for Setting
-// 1 for =
-// 49 for value
-// 1 for space
-// Rest for comment after //
+// Default Spacing:
+// 19 for Setting
+// 55 for value
 
 import "bytes"
 
@@ -20,34 +17,34 @@ type ConfigFile struct {
 	widthValue   int
 }
 
-// NewConfigFile returns a ConfigFile object, instanced with defaults
-func NewConfigFile() *ConfigFile {
+// New returns a ConfigFile object, instanced with defaults
+func New() *ConfigFile {
 	return &ConfigFile{
-		widthSetting: 19,
+		widthSetting: 18,
 		widthValue:   55,
 	}
 }
 
-// AppendBlankLine builds a uniform line structure for config files
-func (c *ConfigFile) AppendBlankLine() {
+// AppendLineBlank builds a uniform line structure for config files
+func (c *ConfigFile) AppendLineBlank() {
 	// Terminate Line
 	c.content.WriteString("\r\n")
 }
 
-// AppendSeperatorLine builds a uniform line structure for config files
-func (c *ConfigFile) AppendSeperatorLine() {
+// AppendLineSeperator builds a uniform line structure for config files
+func (c *ConfigFile) AppendLineSeperator() {
 	// Comment Character
 	c.content.WriteString("#")
 	// Pad out the setting
-	for c.content.Len() < c.widthSetting+c.widthValue {
+	for x := 0; x <= c.widthSetting+c.widthValue; x++ {
 		c.content.WriteString("-")
 	}
 	// Terminate Line
 	c.content.WriteString("\r\n")
 }
 
-// AppendCommentLine builds a uniform line structure for config files
-func (c *ConfigFile) AppendCommentLine(comment string) {
+// AppendLineComment builds a uniform line structure for config files
+func (c *ConfigFile) AppendLineComment(comment string) {
 	// Comment Character
 	c.content.WriteString("# ")
 	// Output the comment
@@ -56,14 +53,14 @@ func (c *ConfigFile) AppendCommentLine(comment string) {
 	c.content.WriteString("\r\n")
 }
 
-// AppendLine builds a uniform line structure for config files
-func (c *ConfigFile) AppendLine(setting string, value string, comment string, writeEmpty bool) {
+// AppendLineSetting builds a uniform line structure for config files
+func (c *ConfigFile) AppendLineSetting(setting string, value string, comment string, writeEmpty bool) {
 
 	if value != "" || writeEmpty {
 		// Write the Setting
 		c.content.WriteString(setting)
 		// Pad out the setting
-		for c.content.Len() < 19 {
+		for x := len(setting); x <= c.widthSetting; x++ {
 			c.content.WriteString(" ")
 		}
 		// Write the Delimiter
@@ -73,7 +70,7 @@ func (c *ConfigFile) AppendLine(setting string, value string, comment string, wr
 		// If a comment is present
 		if comment != "" {
 			// Pad out the value
-			for c.content.Len() < 55 {
+			for x := len(value); x <= c.widthValue; x++ {
 				c.content.WriteString(" ")
 			}
 			// Write the Delimiter
